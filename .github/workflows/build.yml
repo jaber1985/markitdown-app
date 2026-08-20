@@ -21,13 +21,14 @@ jobs:
 
       - name: Build executable
         run: |
-          pyinstaller --noconfirm --windowed --onefile --name MarkItDown `
-            --collect-all magika `
+          pyinstaller --noconfirm --windowed --onefile --name MarkItDown --icon icon.ico `
+            --collect-all magika --collect-all tkinterdnd2 --collect-all rapidocr_onnxruntime --collect-all uvicorn `
             --hidden-import pptx --hidden-import mammoth --hidden-import pandas `
             --hidden-import openpyxl --hidden-import xlrd --hidden-import lxml `
             --hidden-import pdfminer --hidden-import pdfplumber --hidden-import olefile `
             --hidden-import youtube_transcript_api --hidden-import markdownify `
             --hidden-import bs4 --hidden-import charset_normalizer --hidden-import defusedxml `
+            --hidden-import fastapi --hidden-import multipart `
             markitdown_app.py
 
       - name: Smoke test (headless)
