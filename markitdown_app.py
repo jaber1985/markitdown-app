@@ -97,6 +97,9 @@ STRINGS = {
         "update_err": "تعذّر التحقق من التحديثات (تحقق من الاتصال).",
         "drop_hint": "⬇ اسحب الملفات وأفلتها هنا ⬇",
         "url_invalid": "الرجاء إدخال رابط يبدأ بـ http:// أو https://",
+        "credit": "تطوير: Jaber Aleida",
+        "menu_about": "عن البرنامج",
+        "about_text": "MarkItDown {}\n\nأداة لتحويل الملفات إلى Markdown\nمبنية على مكتبة markitdown من Microsoft (MIT)\n\nتطوير وتوقيع: Jaber Aleida",
     },
     "en": {
         "title": "MarkItDown — Convert files to Markdown",
@@ -136,6 +139,9 @@ STRINGS = {
         "update_err": "Could not check for updates (check connection).",
         "drop_hint": "⬇ Drag & drop files here ⬇",
         "url_invalid": "Please enter a URL starting with http:// or https://",
+        "credit": "Developed by Jaber Aleida",
+        "menu_about": "About",
+        "about_text": "MarkItDown {}\n\nConvert files to Markdown\nBuilt on Microsoft's markitdown library (MIT)\n\nDeveloped & signed by: Jaber Aleida",
     },
 }
 
@@ -299,6 +305,8 @@ class MarkItDownApp(_TkBase):
         app_menu = tk.Menu(menubar, tearoff=0)
         app_menu.add_command(label=t("menu_lang"), command=self.toggle_language)
         app_menu.add_command(label=t("menu_update"), command=self.manual_update_check)
+        app_menu.add_separator()
+        app_menu.add_command(label=t("menu_about"), command=self.show_about)
         menubar.add_cascade(label="MarkItDown", menu=app_menu)
         self.config(menu=menubar)
         self._menubar = menubar
@@ -324,6 +332,8 @@ class MarkItDownApp(_TkBase):
         self.lbl_sub = ttk.Label(self, text=t("subtitle") + "\n" + t("supported"),
                                  justify="left", foreground="#444444", wraplength=720)
         self.lbl_sub.pack(anchor="w", padx=10)
+        ttk.Label(self, text=t("credit"), justify="left",
+                  foreground="#888888", font=("Helvetica", 10)).pack(anchor="w", padx=10)
 
         # file list
         self.list_frame = ttk.LabelFrame(self, text=t("files_frame"))
@@ -631,6 +641,10 @@ class MarkItDownApp(_TkBase):
         combo.bind("<<ComboboxSelected>>", load)
         load()
 
+    # ---------- about ----------
+    def show_about(self):
+        messagebox.showinfo(t("menu_about"), t("about_text").format(__version__))
+
     # ---------- updates ----------
     def _silent_update_check(self):
         res = check_update()
@@ -685,6 +699,7 @@ WEB_HTML = """<!doctype html>
 </p>
 <p><label><input type="checkbox" id="merge"> دمج كل النتائج في ملف واحد</label></p>
 <div id="out">النتائج تظهر هنا…</div>
+<p style="color:#999;font-size:12px;margin-top:24px">تطوير: Jaber Aleida — MarkItDown 2.0</p>
 <script>
 const drop = document.getElementById('drop'), file = document.getElementById('file'),
       out = document.getElementById('out');

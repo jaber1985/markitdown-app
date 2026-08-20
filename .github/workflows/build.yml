@@ -22,6 +22,7 @@ jobs:
       - name: Build executable
         run: |
           pyinstaller --noconfirm --windowed --onefile --name MarkItDown --icon icon.ico `
+            --version-file version_info.txt `
             --collect-all magika --collect-all tkinterdnd2 --collect-all rapidocr_onnxruntime --collect-all uvicorn `
             --hidden-import pptx --hidden-import mammoth --hidden-import pandas `
             --hidden-import openpyxl --hidden-import xlrd --hidden-import lxml `
