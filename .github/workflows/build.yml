@@ -1,0 +1,54 @@
+name: Build Windows
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+
+      - name: Build executable
+        run: |
+          pyinstaller --noconfirm --windowed --onefile --name MarkItDown `
+            --collect-all magika `
+            --hidden-import pptx --hidden-import mammoth --hidden-import pandas `
+            --hidden-import openpyxl --hidden-import xlrd --hidden-import lxml `
+            --hidden-import pdfminer --hidden-import pdfplumber --hidden-import olefile `
+            --hidden-import youtube_transcript_api --hidden-import markdownify `
+            --hidden-import bs4 --hidden-import charset_normalizer --hidden-import defusedxml `
+            markitdown_app.py
+
+      - name: Smoke test (headless)
+        run: |
+          Set-Content -Path test.html -Value '<h1>Test</h1><p>Hello <b>World</b></p>'
+          .\dist\MarkItDown.exe --selftest test.html
+
+      - name: Install Inno Setup
+        run: choco install innosetup -y --no-progress
+
+      - name: Build installer
+        run: iscc installer.iss
+
+      - name: Upload portable exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: MarkItDown-portable-exe
+          path: dist/MarkItDown.exe
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: MarkItDown-Setup
+          path: installer/MarkItDown-Setup.exe
